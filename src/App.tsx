@@ -1,0 +1,223 @@
+import { useForm } from "react-hook-form";
+import { useState } from "react";
+import { toast } from "react-toastify";
+
+import "./App.css";
+
+import { RHFInput } from "./components/Input/RHFInput";
+import { RHFSelect } from "./components/Select";
+import { RHFTextarea } from "./components/Textarea";
+import { RHFCheckbox } from "./components/Checkbox";
+import { RHFSwitch } from "./components/Switch";
+
+import { Card, CardHeader, CardContent, CardFooter } from "./components/Card";
+import { Badge } from "./components/Badge";
+import { ButtonBase } from "./components/Button";
+
+import { Modal, ModalContent, ModalFooter, ModalHeader } from "./components/Modal";
+import { Alert } from "./components/Alert";
+import { ToastProvider } from "./components/Toast/ToastProvider";
+import { RHFFileInput } from "./components/FileInput";
+import { FullscreenLoader, SpinnerBase } from "./components/Spinner";
+import MuniSpinner from "./components/Spinner/MuniSpinner";
+
+type FormValues = {
+  nombre: string;
+  tipo: "a" | "b";
+  descripcion: string;
+  permisoA: boolean;
+  permisoB: boolean;
+  puedeVer: boolean;
+};
+
+function App() {
+  const { control, handleSubmit } = useForm<FormValues>({
+    defaultValues: {
+      nombre: "",
+      tipo: "a",
+      descripcion: "",
+      permisoA: true,
+      permisoB: false,
+      puedeVer: false,
+      adjunto: null,
+    },
+  });
+
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  type FormValues = {
+    // ...
+    adjunto: File | null;
+  };
+
+  const onSubmit = (values: FormValues) => {
+    console.log(values);
+    toast.success("Guardado correctamente.");
+  };
+
+
+  return (
+    <div className="min-h-screen bg-bg p-6 flex items-center justify-center">
+      <ToastProvider />
+
+      <div className="w-full max-w-2xl space-y-4">
+        <Alert
+          color="warning"
+          title="Atención"
+          description="Falta completar un campo obligatorio."
+          endContent={<Badge>!</Badge>}
+        />
+
+        <div className="flex gap-3">
+          <ButtonBase type="button" onClick={() => setOpen(true)}>
+            Abrir modal
+          </ButtonBase>
+
+          <ButtonBase
+            type="button"
+            variant="outline"
+            onClick={() => {
+              toast.success("Guardado correctamente.");
+              toast.warning("Falta completar un campo obligatorio.");
+              toast.error("No se pudo guardar. Reintentá.");
+            }}
+          >
+            Probar toast
+          </ButtonBase>
+
+        </div>
+        <div>
+          <RHFFileInput
+            name="adjunto"
+            control={control}
+            label="Adjuntar archivo"
+            description="PDF / JPG / PNG / TXT"
+            accept={[".pdf", ".jpg", ".jpeg", ".png", ".txt", ".csv"]}
+            preview
+            previewHeight={240}
+          />
+        </div>
+        <Modal open={open} onOpenChange={setOpen} size="md">
+          <ModalHeader
+            title="Confirmación"
+            subtitle="Ejemplo de modal base (tokens + tailwind)"
+            right={<Badge>UI</Badge>}
+          />
+
+          <ModalContent className="space-y-3">
+            <div className="text-sm text-text">
+              Este modal usa <span className="font-semibold">bg-surface</span>,{" "}
+              <span className="font-semibold">border-border</span>,{" "}
+              <span className="font-semibold">text-primary-700</span> y ring coral.
+            </div>
+
+            <div className="rounded-xl border border-border bg-bg p-4 text-sm text-muted">
+              Tip: luego podemos sumar focus-trap y animaciones.
+            </div>
+          </ModalContent>
+
+          <ModalFooter>
+            <ButtonBase
+              type="button"
+              variant="outline"
+              color="gray"
+              onClick={() => setOpen(false)}
+            >
+              Cancelar
+            </ButtonBase>
+
+            <ButtonBase type="button" color="primary" onClick={() => setOpen(false)}>
+              Aceptar
+            </ButtonBase>
+          </ModalFooter>
+        </Modal>
+        <div className="min-h-screen bg-bg p-6 space-y-4">
+      <MuniSpinner text="Procesando..." />
+
+      <ButtonBase onClick={() => setLoading(true)}>
+        Mostrar loader
+      </ButtonBase>
+
+      <FullscreenLoader open={loading} />
+    </div>
+
+        <Card>
+          <CardHeader
+            title="Formulario"
+            subtitle="Componentes base (MuniExpress)"
+            right={<Badge>v0.1</Badge>}
+          />
+
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <CardContent className="space-y-6">
+              <RHFInput
+                name="nombre"
+                control={control}
+                label="Nombre"
+                placeholder="Escribí tu nombre"
+              />
+
+              <RHFSelect
+                name="tipo"
+                control={control}
+                label="Tipo"
+                placeholder="Seleccione una opción"
+                options={[
+                  { value: "a", label: "Opción A" },
+                  { value: "b", label: "Opción B" },
+                ]}
+              />
+
+              <RHFTextarea
+                name="descripcion"
+                control={control}
+                label="Descripción"
+                placeholder="Escribí una descripción..."
+                rows={5}
+                helperText="Máximo 500 caracteres."
+              />
+
+              <div className="space-y-3 rounded-xl border border-border bg-bg p-4">
+                <div className="text-sm font-semibold text-primary-500 text-center">
+                  Permisos
+                </div>
+
+                <div className="space-y-3">
+                  <RHFCheckbox
+                    name="permisoA"
+                    control={control}
+                    label="Puede ver registros"
+                    description="Permite acceder a listados y reportes."
+                  />
+
+                  <RHFCheckbox
+                    name="permisoB"
+                    control={control}
+                    label="Puede editar permisos"
+                    description="Habilita asignación de roles/permisos."
+                  />
+                </div>
+              </div>
+
+              <RHFSwitch
+                name="puedeVer"
+                control={control}
+                label="Puede ver registros"
+                description="Permite acceder a listados y reportes."
+              />
+            </CardContent>
+
+            <CardFooter>
+              <ButtonBase type="submit" className="w-full">
+                Guardar
+              </ButtonBase>
+            </CardFooter>
+          </form>
+        </Card>
+      </div>
+    </div>
+  );
+}
+
+export default App;

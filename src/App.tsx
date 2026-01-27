@@ -20,6 +20,8 @@ import { ToastProvider } from "./components/Toast/ToastProvider";
 import { RHFFileInput } from "./components/FileInput";
 import { FullscreenLoader, SpinnerBase } from "./components/Spinner";
 import MuniSpinner from "./components/Spinner/MuniSpinner";
+import { TableModal, type TableColumn } from "./components/Table";
+
 
 type FormValues = {
   nombre: string;
@@ -45,6 +47,40 @@ function App() {
 
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [openTable, setOpenTable] = useState(false);
+const [qTable, setQTable] = useState("");
+const [pageTable, setPageTable] = useState(0);
+const [rppTable, setRppTable] = useState(100);
+
+type Row = { type: string; name: string; label: string };
+
+const data: Row[] = [
+  { type: "H2", name: "prioridad_ticket", label: "Ninguna" },
+  { type: "H2", name: "prioridad_ticket", label: "Baja" },
+  { type: "H2", name: "prioridad_ticket", label: "Media" },
+  { type: "H2", name: "prioridad_ticket", label: "Alta" },
+  { type: "H2", name: "prioridad_ticket", label: "Muy Alta" },
+];
+
+const filteredRows = (() => {
+  const s = qTable.trim().toLowerCase();
+  if (!s) return data;
+  return data.filter((r) =>
+    `${r.type} ${r.name} ${r.label}`.toLowerCase().includes(s)
+  );
+})();
+
+const columns: Array<TableColumn<Row>> = [
+  
+    {
+      id: "type",
+      header: "H2",
+      cellClassName: "text-table-header-text font-semibold",
+      render: (r) => r.type,
+    },
+    { id: "name", header: "Name", render: (r) => r.name },
+    { id: "label", header: "label", render: (r) => r.label },
+];
 
   type FormValues = {
     // ...
@@ -141,7 +177,11 @@ function App() {
 
       <FullscreenLoader open={loading} />
     </div>
-
+<div>
+<ButtonBase type="button" variant="outline" onClick={() => setOpenTable(true)}>
+  Abrir tabla
+</ButtonBase>
+</div>
         <Card>
           <CardHeader
             title="Formulario"
@@ -207,12 +247,30 @@ function App() {
                 description="Permite acceder a listados y reportes."
               />
             </CardContent>
+            <TableModal<Row>
+  open={openTable}
+  onOpenChange={setOpenTable}
+  title="Tabla ejemplo"
+  rows={filteredRows}
+  columns={columns}
+  searchValue={qTable}
+  onSearchChange={(v) => {
+    setQTable(v);
+    setPageTable(0);
+  }}
+  page={pageTable}
+  rowsPerPage={rppTable}
+  onPageChange={setPageTable}
+  onRowsPerPageChange={setRppTable}
+  getRowId={(r, i) => `${r.name}-${r.label}-${i}`}
+/>
 
             <CardFooter>
               <ButtonBase type="submit" className="w-full">
                 Guardar
               </ButtonBase>
             </CardFooter>
+
           </form>
         </Card>
       </div>

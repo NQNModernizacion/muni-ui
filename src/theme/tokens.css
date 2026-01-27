@@ -1,52 +1,64 @@
 :root {
-    /* Brand (MuniExpress) */
-    --mx-primary-400: 232 92 74;
-    /* coral (focus/borde activo) */
-    --mx-primary-500: 221 76 58;
-    --mx-primary-600: 160 49 45;
-    /* bordó (evitar para focus) */
-
-    --mx-secondary-500: 255 205 61;
-    /* amarillo */
-    --mx-secondary-600: 245 190 45;
-
-    /* UI neutrales */
+    /* =========================
+       Brand (MuniExpress)
+       ========================= */
+  
+    /* coral: #FF6169 */
+    --mx-primary-400: 255 97 105;
+    --mx-primary-500: 255 97 105;
+    --mx-primary-600: 160 49 45; /* opcional */
+  
+    /* amarillo: #FAEEA0 */
+    --mx-secondary-500: 250 238 160;
+    --mx-secondary-600: 245 190 45; /* opcional */
+  
+    /* =========================
+       UI neutrales
+       ========================= */
     --mx-text: 31 41 55;
-    /* slate-800 aprox */
     --mx-muted: 107 114 128;
-    /* gray-500 aprox */
     --mx-border: 220 223 230;
-    /* borde gris */
     --mx-surface: 255 255 255;
-    /* fondo inputs/cards */
     --mx-bg: 245 246 248;
-    /* background general suave */
-
-    /* Ring */
+  
+    /* Ring / Loader */
     --mx-ring: var(--mx-primary-400);
-
-    /* Loader */
     --mx-loader-track: 220 223 230;
-    /* mismo tono que border */
     --mx-loader: var(--mx-primary-400);
-    /* coral */
-
-
-    /* semantic */
+  
+    /* =========================
+       Semantic (status)
+       ========================= */
     --mx-success-50: 236 253 245;
     --mx-success-600: 22 163 74;
     --mx-success-700: 21 128 61;
-
+  
     --mx-warning-50: 255 251 235;
     --mx-warning-500: 245 158 11;
     --mx-warning-600: 217 119 6;
     --mx-warning-700: 180 83 9;
-
+  
     --mx-danger-50: 254 242 242;
     --mx-danger-600: 220 38 38;
     --mx-danger-700: 185 28 28;
-
+  
     --mx-info-50: 239 246 255;
     --mx-info-600: 37 99 235;
     --mx-info-700: 29 78 216;
-}
+  
+    /* =========================
+       Semánticos por componente
+       ========================= */
+    --mx-table-header-bg: var(--mx-secondary-500);  /* amarillo */
+    --mx-table-header-text: var(--mx-primary-400);  /* coral */
+    --mx-table-row-hover: 255 248 220;
+
+    --mx-nav-action-bg: var(--mx-primary-400);
+  --mx-nav-action-bg-hover: var(--mx-primary-600);
+  --mx-nav-action-text: 255 255 255;
+
+  --mx-nav-action-bg: var(--mx-primary-400);
+  --mx-nav-action-bg-hover: var(--mx-primary-600);
+  --mx-nav-action-text: 255 255 255;
+  }
+  

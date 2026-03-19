@@ -11,6 +11,8 @@ export type TableModalProps<T> = {
   onOpenChange: (open: boolean) => void;
 
   title: React.ReactNode;
+  
+  
 
   rows: T[];
   columns: Array<TableColumn<T>>;

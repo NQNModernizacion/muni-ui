@@ -4,23 +4,23 @@ import { toast } from "react-toastify";
 
 import "./App.css";
 
-import { RHFInput } from "./components/Input/RHFInput";
-import { RHFSelect } from "./components/Select";
-import { RHFTextarea } from "./components/Textarea";
-import { RHFCheckbox } from "./components/Checkbox";
-import { RHFSwitch } from "./components/Switch";
+import { RHFInput } from "../src/components/Input/RHFInput";
+import { RHFSelect } from "../src/components/Select";
+import { RHFTextarea } from "../src/components/Textarea";
+import { RHFCheckbox } from "../src/components/Checkbox";
+import { RHFSwitch } from "../src/components/Switch";
 
-import { Card, CardHeader, CardContent, CardFooter } from "./components/Card";
-import { Badge } from "./components/Badge";
-import { ButtonBase } from "./components/Button";
+import { Card, CardHeader, CardContent, CardFooter } from "../src/components/Card";
+import { Badge } from "../src/components/Badge";
+import { ButtonBase } from "../src/components/Button";
 
-import { Modal, ModalContent, ModalFooter, ModalHeader } from "./components/Modal";
-import { Alert } from "./components/Alert";
-import { ToastProvider } from "./components/Toast/ToastProvider";
-import { RHFFileInput } from "./components/FileInput";
-import { FullscreenLoader, SpinnerBase } from "./components/Spinner";
-import MuniSpinner from "./components/Spinner/MuniSpinner";
-import { TableModal, type TableColumn } from "./components/Table";
+import { Modal, ModalContent, ModalFooter, ModalHeader } from "../src/components/Modal";
+import { Alert } from "../src/components/Alert";
+import { ToastProvider } from "../src/components/Toast/ToastProvider";
+import { RHFFileInput } from "../src/components/FileInput";
+import { FullscreenLoader, SpinnerBase } from "../src/components/Spinner";
+import MuniSpinner from "../src/components/Spinner/MuniSpinner";
+import { TableModal, type TableColumn } from "../src/components/Table";
 
 
 type FormValues = {

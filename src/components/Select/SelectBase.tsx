@@ -14,7 +14,8 @@ export type SelectBaseProps = Omit<
   value?: string | number;
   onChange?: (value: string) => void;
   error?: boolean;
-  placeholder?: string; // "Seleccione..."
+  placeholder?: string;
+  disabled?: boolean
 };
 
 function cx(...classes: Array<string | false | null | undefined>) {
@@ -23,25 +24,19 @@ function cx(...classes: Array<string | false | null | undefined>) {
 
 const SelectBase = React.forwardRef<HTMLSelectElement, SelectBaseProps>(
   function SelectBase(
-    { className, options, value, onChange, error, placeholder, disabled, ...props },
+    { className, options, value, onChange, error, disabled, placeholder, ...props },
     ref
   ) {
-    const base =
-      "block w-full rounded-xl px-3 py-2 text-text placeholder:text-muted " +
-      "bg-surface border border-border outline-none transition";
-
-    const focus = "focus:border-primary-400 focus:ring-2 focus:ring-primary-400/25";
-
-    const state = cx(
-      disabled && "disabled:opacity-60 disabled:cursor-not-allowed",
-      error && "border-red-500 focus:border-red-500 focus:ring-red-500/20"
-    );
-
     return (
       <select
         ref={ref}
         disabled={disabled}
-        className={cx(base, focus, state, className)}
+        className={cx(
+          "mx-select",
+          error && "mx-select--error",
+          disabled && "mx-disabled",
+          className
+        )}
         value={value === undefined || value === null ? "" : String(value)}
         onChange={(e) => onChange?.(e.target.value)}
         {...props}
@@ -63,3 +58,4 @@ const SelectBase = React.forwardRef<HTMLSelectElement, SelectBaseProps>(
 );
 
 export default SelectBase;
+export { SelectBase };

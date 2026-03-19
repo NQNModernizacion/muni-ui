@@ -8,32 +8,24 @@ export type FileInputBaseProps = {
   description?: React.ReactNode;
   helperText?: React.ReactNode;
 
-  /** valor controlado */
   value?: FileValue;
-
-  /** callback controlado */
   onValueChange?: (value: FileValue) => void;
 
-  /** input props */
   accept?: string | string[];
   multiple?: boolean;
   disabled?: boolean;
   name?: string;
   id?: string;
 
-  /** estados */
   errorText?: string;
 
-  /** UI */
   containerClassName?: string;
   labelClassName?: string;
 
-  /** lista de archivos (default true) */
   showList?: boolean;
 
-  /** PREVIEW */
-  preview?: boolean; // default true
-  previewHeight?: number; // px
+  preview?: boolean;
+  previewHeight?: number;
   textMaxChars?: number;
 };
 
@@ -50,7 +42,6 @@ function getPreviewKind(file: File): PreviewKind {
   if (t.startsWith("image/")) return "image";
   if (t === "application/pdf" || n.endsWith(".pdf")) return "pdf";
   if (t.startsWith("text/") || n.endsWith(".txt") || n.endsWith(".csv")) return "text";
-
   return "none";
 }
 
@@ -74,21 +65,23 @@ export default function FileInputBase({
   containerClassName,
   labelClassName,
   showList = true,
-
   preview = true,
   previewHeight = 220,
   textMaxChars = 2000,
 }: FileInputBaseProps) {
-  const inputId = id ?? (name ? `file-${name}` : "file-input");
+  const reactId = React.useId();
+  const inputId = id ?? (name ? `file-${name}` : `file-${reactId}`);
+
+  const inputRef = React.useRef<HTMLInputElement | null>(null);
 
   const filesArray: File[] = React.useMemo(() => {
     if (!value) return [];
-    return Array.isArray(value) ? value : [value];
-  }, [value]);
+    if (Array.isArray(value)) return multiple ? value : value.slice(0, 1);
+    return [value];
+  }, [value, multiple]);
 
   const firstFile = filesArray[0] ?? null;
 
-  // ---------- PREVIEW STATE ----------
   const [previewKind, setPreviewKind] = React.useState<PreviewKind>("none");
   const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
   const [previewText, setPreviewText] = React.useState<string>("");
@@ -137,7 +130,6 @@ export default function FileInputBase({
     };
   }, [firstFile, preview, textMaxChars]);
 
-  // ---------- HANDLERS ----------
   const acceptAttr = Array.isArray(accept) ? accept.join(",") : accept;
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -150,22 +142,25 @@ export default function FileInputBase({
     onValueChange?.(next);
   };
 
-  const clear = () => onValueChange?.(null);
+  const clear = () => {
+    if (inputRef.current) inputRef.current.value = "";
+    onValueChange?.(null);
+  };
 
-  // ---------- UI ----------
   return (
-    <div className={containerClassName ?? "space-y-2"}>
+    <div className={cx("mx-ui", containerClassName ?? "mx-stack")}>
       {label ? (
         <Label htmlFor={inputId} className={labelClassName}>
           {label}
         </Label>
       ) : null}
 
-      {description ? <div className="text-sm text-muted">{description}</div> : null}
+      {description ? <div className="mx-text-sm mx-muted">{description}</div> : null}
 
-      <div className="rounded-2xl border border-border bg-surface p-4">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mx-surface mx-surface-pad">
+        <div className="mx-row-between">
           <input
+            ref={inputRef}
             id={inputId}
             name={name}
             type="file"
@@ -173,90 +168,106 @@ export default function FileInputBase({
             multiple={multiple}
             accept={acceptAttr}
             onChange={onChange}
-            className={cx(
-              "block w-full text-sm text-text file:mr-4 file:rounded-xl file:border-0 file:px-4 file:py-2",
-              "file:bg-primary-400 file:text-white file:font-semibold hover:file:bg-primary-500",
-              disabled && "opacity-60"
-            )}
+            className={cx("mx-file-input", disabled && "mx-disabled")}
           />
 
           {filesArray.length > 0 ? (
-            <button
-              type="button"
-              onClick={clear}
-              className={cx(
-                "rounded-xl border border-border bg-bg px-3 py-2 text-sm font-semibold text-text",
-                "hover:bg-surface"
-              )}
-            >
+            <button type="button" onClick={clear} className="mx-btn">
               Quitar
             </button>
           ) : null}
         </div>
 
         {showList && filesArray.length > 0 ? (
-          <div className="mt-3 space-y-1">
+          <div className="mx-stack" style={{ marginTop: ".75rem" }}>
             {filesArray.map((f) => (
-              <div key={f.name + f.size} className="text-sm text-muted">
-                {f.name} <span className="text-muted/70">({Math.ceil(f.size / 1024)} KB)</span>
+              <div key={`${f.name}-${f.size}-${f.lastModified}`} className="mx-text-sm mx-muted">
+                {f.name}{" "}
+                <span style={{ opacity: 0.7 }}>({Math.ceil(f.size / 1024)} KB)</span>
               </div>
             ))}
           </div>
         ) : null}
 
-        {helperText ? <div className="mt-3 text-xs text-muted">{helperText}</div> : null}
-
-        {errorText ? <div className="mt-2 text-xs text-danger-700">{errorText}</div> : null}
+        {helperText ? (
+          <div className="mx-text-xs mx-muted" style={{ marginTop: ".75rem" }}>
+            {helperText}
+          </div>
+        ) : null}
+        {errorText ? <div className="mx-error">{errorText}</div> : null}
       </div>
 
-      {/* PREVIEW INLINE */}
       {preview && firstFile ? (
-        <div className="rounded-2xl border border-border bg-surface p-3">
-          <div className="mb-2 flex items-center justify-between gap-3">
-            <div className="text-sm font-semibold text-primary-700">Previsualización</div>
+  <div className="mx-surface mx-surface-pad" style={{ marginTop: ".75rem" }}>
+    <div className="mx-row-between" style={{ alignItems: "center", marginBottom: ".5rem" }}>
+      <div className="mx-text-sm mx-font-semibold">Vista previa</div>
+      <div className="mx-text-xs mx-muted">
+        {firstFile.type || "sin tipo"} · {Math.ceil(firstFile.size / 1024)} KB
+      </div>
+    </div>
 
-            {previewUrl ? (
-              <a
-                className="text-sm font-semibold text-primary-700 hover:underline"
-                href={previewUrl}
-                target="_blank"
-                rel="noreferrer"
-              >
-                Abrir
-              </a>
-            ) : null}
-          </div>
-
-          {previewErr ? (
-            <div className="text-sm text-danger-700">{previewErr}</div>
-          ) : previewKind === "image" && previewUrl ? (
-            <div
-              className="overflow-hidden rounded-xl border border-border bg-bg"
-              style={{ height: previewHeight }}
-            >
-              <img src={previewUrl} alt={firstFile.name} className="h-full w-full object-contain" />
-            </div>
-          ) : previewKind === "pdf" && previewUrl ? (
-            <div
-              className="overflow-hidden rounded-xl border border-border bg-bg"
-              style={{ height: previewHeight }}
-            >
-              <iframe title={`pdf-${firstFile.name}`} src={previewUrl} className="h-full w-full" />
-            </div>
-          ) : previewKind === "text" ? (
-            <pre
-              className="max-w-full overflow-auto rounded-xl border border-border bg-bg p-3 text-xs text-text"
-              style={{ maxHeight: previewHeight }}
-            >
-              {previewText}
-            </pre>
-          ) : (
-            <div className="text-sm text-muted">
-              No hay previsualización disponible para este tipo de archivo.
-            </div>
-          )}
+    {previewErr ? (
+      <div className="mx-error">{previewErr}</div>
+    ) : previewKind === "image" && previewUrl ? (
+      <img
+        src={previewUrl}
+        alt={firstFile.name}
+        style={{
+          width: "100%",
+          height: previewHeight,
+          objectFit: "contain",
+          borderRadius: ".75rem",
+          background: "rgb(var(--mx-bg))",
+          border: "1px solid rgb(var(--mx-border))",
+        }}
+      />
+    ) : previewKind === "pdf" && previewUrl ? (
+      <iframe
+        title={`preview-${firstFile.name}`}
+        src={previewUrl}
+        style={{
+          width: "100%",
+          height: previewHeight,
+          border: "1px solid rgb(var(--mx-border))",
+          borderRadius: ".75rem",
+          background: "rgb(var(--mx-surface))",
+        }}
+      />
+    ) : previewKind === "text" ? (
+      <pre
+        style={{
+          height: previewHeight,
+          overflow: "auto",
+          background: "rgb(var(--mx-bg))",
+          border: "1px solid rgb(var(--mx-border))",
+          borderRadius: ".75rem",
+          padding: ".75rem",
+          whiteSpace: "pre-wrap",
+          fontSize: ".75rem",
+          lineHeight: "1rem",
+          color: "rgb(var(--mx-text))",
+        }}
+      >
+        {previewText || "Cargando..."}
+      </pre>
+    ) : (
+      // ✅ fallback para cualquier tipo: al menos “se muestra el archivo”
+      <div
+        className="mx-surface-pad"
+        style={{
+          background: "rgb(var(--mx-bg))",
+          border: "1px dashed rgb(var(--mx-border))",
+          borderRadius: ".75rem",
+        }}
+      >
+        <div className="mx-text-sm mx-font-semibold">{firstFile.name}</div>
+        <div className="mx-text-xs mx-muted" style={{ marginTop: ".25rem" }}>
+          No hay vista previa para este tipo de archivo.
         </div>
-      ) : null}
+      </div>
+    )}
+  </div>
+) : null}
     </div>
   );
 }

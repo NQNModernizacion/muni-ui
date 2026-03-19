@@ -1,16 +1,13 @@
-@import "./theme/tokens.css";
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Base global mínima para la librería */
-html, body, #root {
-  height: 100%;
+/* Scope UI */
+:where(.mx-ui) {
+  color: rgb(var(--mx-text));
+  background: rgb(var(--mx-bg));
 }
 
-body {
-  margin: 0;
-  background: rgb(var(--mx-bg));
-  color: rgb(var(--mx-text));
+:where(.mx-ui).mx-ui--full {
+  min-height: 100vh;
 }

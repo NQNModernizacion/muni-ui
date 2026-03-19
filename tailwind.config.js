@@ -1,6 +1,18 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  safelist: [
+    // file input button
+    "file:mr-4",
+    "file:rounded-xl",
+    "file:border-0",
+    "file:px-4",
+    "file:py-2",
+    "file:bg-primary-400",
+    "file:text-white",
+    "file:font-semibold",
+    "hover:file:bg-primary-500",
+  ],
   theme: {
     extend: {
       colors: {
@@ -52,17 +64,17 @@ export default {
         border: "rgb(var(--mx-border) / <alpha-value>)",
         surface: "rgb(var(--mx-surface) / <alpha-value>)",
         bg: "rgb(var(--mx-bg) / <alpha-value>)",
-    
+
         "mx-primary-400": "rgb(var(--mx-primary-400) / <alpha-value>)",
         "mx-secondary-500": "rgb(var(--mx-secondary-500) / <alpha-value>)",
-    
+
         "table-header-bg": "rgb(var(--mx-table-header-bg) / <alpha-value>)",
         "table-header-text": "rgb(var(--mx-table-header-text) / <alpha-value>)",
         "table-row-hover": "rgb(var(--mx-table-row-hover) / <alpha-value>)",
 
         "nav-action-bg": "rgb(var(--mx-nav-action-bg) / <alpha-value>)",
-"nav-action-bg-hover": "rgb(var(--mx-nav-action-bg-hover) / <alpha-value>)",
-"nav-action-text": "rgb(var(--mx-nav-action-text) / <alpha-value>)",
+        "nav-action-bg-hover": "rgb(var(--mx-nav-action-bg-hover) / <alpha-value>)",
+        "nav-action-text": "rgb(var(--mx-nav-action-text) / <alpha-value>)",
 
 
       },

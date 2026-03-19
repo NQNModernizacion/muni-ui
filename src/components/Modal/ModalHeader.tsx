@@ -1,9 +1,15 @@
 import * as React from "react";
 
-export type ModalHeaderProps = React.HTMLAttributes<HTMLDivElement> & {
+// export type ModalHeaderProps = React.HTMLAttributes<HTMLDivElement> & {
+//   title?: React.ReactNode;
+//   subtitle?: React.ReactNode;
+//   right?: React.ReactNode; // ej. botón cerrar, badge, etc.
+// };
+
+export type ModalHeaderProps = Omit<React.HTMLAttributes<HTMLDivElement>, "title"> & {
   title?: React.ReactNode;
   subtitle?: React.ReactNode;
-  right?: React.ReactNode; // ej. botón cerrar, badge, etc.
+  right?: React.ReactNode;
 };
 
 export default function ModalHeader({

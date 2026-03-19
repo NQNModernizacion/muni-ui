@@ -12,7 +12,12 @@ export type RHFSelectProps = Omit<SelectBaseProps, "value" | "onChange"> & {
   helperText?: React.ReactNode;
   hideError?: boolean;
   options: Option[];
+  disabled?: boolean
 };
+
+function safeId(s: string) {
+  return s.replace(/[^a-zA-Z0-9\-_:.]/g, "-");
+}
 
 export function RHFSelect({
   control,
@@ -25,17 +30,19 @@ export function RHFSelect({
   id,
   options,
   placeholder = "Seleccione una opción",
+  disabled,
   ...selectProps
 }: RHFSelectProps) {
+  const reactId = React.useId();
+  const selectId = id ?? `select-${safeId(name)}-${reactId}`;
+
   const {
     field,
     fieldState: { error },
   } = useController({ name, control });
 
-  const selectId = id ?? `select-${name}`;
-
   return (
-    <div className={containerClassName ?? "space-y-1"}>
+    <div className={containerClassName ?? "mx-stack"} style={{ gap: ".25rem" }}>
       {label ? (
         <Label htmlFor={selectId} className={labelClassName}>
           {label}
@@ -43,22 +50,22 @@ export function RHFSelect({
       ) : null}
 
       <SelectBase
-        id={selectId}
-        options={options}
-        placeholder={placeholder}
-        value={field.value ?? ""}
-        onChange={(v) => field.onChange(v)}
-        onBlur={field.onBlur}
-        name={field.name}
-        disabled={selectProps.disabled}
-        error={Boolean(error)}
-        {...selectProps}
+         {...selectProps}
+         id={selectId}
+         options={options}
+         placeholder={placeholder}
+         value={field.value ?? ""}
+         onChange={(v) => field.onChange(v)}
+         onBlur={field.onBlur}
+         name={field.name}
+         error={Boolean(error)}
+         disabled={disabled}
       />
 
-      {helperText ? <div className="text-xs text-muted">{helperText}</div> : null}
+      {helperText ? <div className="mx-text-xs mx-muted">{helperText}</div> : null}
 
       {!hideError && error?.message ? (
-        <div className="text-xs text-red-600">{String(error.message)}</div>
+        <div className="mx-error">{String(error.message)}</div>
       ) : null}
     </div>
   );

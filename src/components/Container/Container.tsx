@@ -8,35 +8,69 @@ export type ContainerProps = React.PropsWithChildren<{
   title?: React.ReactNode;
   subtitle?: React.ReactNode;
 
-  /** acción "volver" (la app decide cómo navegar) */
+  /** Igual que el template */
+  linkBack?: string;
+
+  /** Alternativa para apps sin router */
   onBack?: () => void;
+
+  /**
+   * Para mantener la librería agnóstica (sin react-router-dom).
+   * En el template pasás BackComponent={Link}.
+   */
+  BackComponent?: React.ElementType<any>;
+
   backLabel?: React.ReactNode;
-  backIcon?: React.ReactNode; // para usar cualquier librería de íconos
+  backIcon?: React.ReactNode;
+
+  /** Estilos extra en el card interno */
   className?: string;
+
+  /** Estilos extra en el wrapper externo */
+  outerClassName?: string;
 }>;
 
 export default function Container({
   children,
   title,
   subtitle,
+  linkBack,
   onBack,
+  BackComponent,
   backLabel = "Volver",
   backIcon,
   className,
+  outerClassName,
   ...props
 }: ContainerProps) {
+  const showBack = Boolean(linkBack || onBack);
+
+  // Default: <a> si hay linkBack; <button> si hay onBack
+  const BackTag: React.ElementType<any> =
+    BackComponent ?? (linkBack ? "a" : "button");
+
+  const backProps =
+    BackTag === "button"
+      ? { type: "button", onClick: onBack }
+      : BackComponent
+      ? { to: linkBack } // react-router Link
+      : { href: linkBack }; // <a>
+
   return (
-    <section className="w-full max-w-screen-xl mx-auto p-3 relative" {...props}>
+    <section
+      className={cx("w-full max-w-screen-xl mx-auto p-3 relative", outerClassName)}
+      {...props}
+    >
       <div className={cx("bg-surface rounded-xl shadow-mxSoft p-4 sm:p-6", className)}>
-        {onBack && (
+        {showBack && (
           <div className="mb-4">
-            <button
-              type="button"
-              onClick={onBack}
+            <BackTag
+              {...backProps}
               className={cx(
                 "inline-flex items-center gap-1",
                 "px-3 py-1.5 rounded-md",
                 "text-sm font-semibold",
+                // ✅ semánticos tokenizados (ya los tenés en tokens.css)
                 "text-nav-action-text",
                 "bg-nav-action-bg hover:bg-nav-action-bg-hover",
                 "transition-colors"
@@ -44,13 +78,14 @@ export default function Container({
             >
               {backIcon ? <span className="inline-flex">{backIcon}</span> : null}
               {backLabel}
-            </button>
+            </BackTag>
           </div>
         )}
 
         {title && (
           <div className="mb-6">
-            <h2 className="text-center text-3xl font-bold text-text">{title}</h2>
+            {/* Igual que template: deja heredar color del scope/base */}
+            <h2 className="text-center text-3xl font-bold">{title}</h2>
 
             {subtitle && (
               <p className="mt-1 text-center text-lg font-medium text-muted">

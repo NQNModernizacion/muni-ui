@@ -1,23 +1,20 @@
 import * as React from "react";
 
 export type LabelProps = {
-  htmlFor: string;
+  htmlFor?: string;
   children: React.ReactNode;
-  className?: string; 
+  className?: string;
 };
 
 const Label = ({ htmlFor, children, className }: LabelProps) => {
   return (
     <label
       htmlFor={htmlFor}
-      className={[
-        "block font-semibold text-primary-500", // coral en labels
-        className ?? "",
-      ].join(" ")}
+      className={["mx-label", className ?? ""].join(" ")}
     >
       {children}
     </label>
   );
-}
+};
 
-export default Label
+export default Label;

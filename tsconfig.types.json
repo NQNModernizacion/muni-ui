@@ -1,0 +1,13 @@
+{
+    "extends": "./tsconfig.app.json",
+    "compilerOptions": {
+      "noEmit": false,
+      "declaration": true,
+      "emitDeclarationOnly": true,
+      "outDir": "dist",
+      "stripInternal": true
+    },
+    "include": ["src"],
+    "exclude": ["playground", "dist", "node_modules"]
+  }
+  

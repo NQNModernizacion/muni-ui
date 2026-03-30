@@ -1,18 +1,18 @@
 :root {
    /* Brand */
-   /* --mx-primary-400: 255 97 105;
+   --mx-primary-400: 255 97 105;
    --mx-primary-500: 255 97 105;
    --mx-primary-600: 160 49 45;
  
    --mx-secondary-500: 250 238 160;
-  --mx-secondary-600: 245 190 45; */
+  --mx-secondary-600: 245 190 45;
 
-       --mx-primary-400: 232 81 207;
+   /* --mx-primary-400: 232 81 207;
    --mx-primary-500: 91 81 232;
    --mx-primary-600: 82 82 82;
  
    --mx-secondary-500: 250 238 160;
-   --mx-secondary-600: 245 190 45; 
+   --mx-secondary-600: 245 190 45;  */
  
    /* UI neutrales */
    --mx-text: 31 41 55;

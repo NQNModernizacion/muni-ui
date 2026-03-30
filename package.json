@@ -1,5 +1,5 @@
 {
-  "name": "@modernizacion/muni-ui",
+  "name": "muni-ui",
   "version": "0.1.0",
   "private": false,
   "type": "module",
@@ -30,6 +30,7 @@
     "dev": "vite",
     "build": "vite build && npm run build:types",
     "build:types": "tsc -p tsconfig.types.json",
+    "prepare": "npm run build",
     "prepublishOnly": "npm run build",
     "lint": "eslint .",
     "preview": "vite preview"

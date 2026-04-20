@@ -11,6 +11,7 @@ export type RHFTextareaProps = TextareaBaseProps & {
   labelClassName?: string;
   helperText?: React.ReactNode;
   hideError?: boolean;
+  smallText?: React.ReactNode;
 };
 
 export function RHFTextarea({
@@ -20,6 +21,7 @@ export function RHFTextarea({
   containerClassName,
   labelClassName,
   helperText,
+  smallText,
   hideError = false,
   id,
   ...textareaProps
@@ -34,9 +36,7 @@ export function RHFTextarea({
   return (
     <div className={containerClassName ?? "space-y-1"}>
       {label ? (
-        <Label htmlFor={textareaId} className={labelClassName}>
-          {label}
-        </Label>
+       <Label label={label} name={name} className={labelClassName} />
       ) : null}
 
       <TextareaBase
@@ -47,7 +47,9 @@ export function RHFTextarea({
         error={Boolean(error)}
       />
 
-      {helperText ? <div className="text-xs text-muted">{helperText}</div> : null}
+      {/* {helperText ? <div className="text-xs text-muted">{helperText}</div> : null} */}
+        {smallText ? <div className="text-xs text-muted">{smallText}</div> : null}
+
 
       {!hideError && error?.message ? (
         <div className="text-xs text-red-600">{String(error.message)}</div>

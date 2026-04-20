@@ -65,8 +65,8 @@ export default function TablePagination({
       <div className="flex items-center gap-2 self-end sm:self-auto">
         <ButtonBase
           type="button"
-          variant="ghost"
-          color="neutral"
+          variant="solid"
+          color="gray"
           size="sm"
           disabled={!canPrev}
           onClick={() => canPrev && onPageChange(page - 1)}
@@ -76,8 +76,8 @@ export default function TablePagination({
 
         <ButtonBase
           type="button"
-          variant="ghost"
-          color="neutral"
+          variant="solid"
+          color="gray"
           size="sm"
           disabled={!canNext}
           onClick={() => canNext && onPageChange(page + 1)}

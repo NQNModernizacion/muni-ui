@@ -1,17 +1,16 @@
-import * as React from "react";
+// import * as React from "react";
 import { useController, type Control } from "react-hook-form";
-import Label from "../Label/Label";
+
 import SwitchBase from "./SwitchBase";
+import Label from "../Label/Label";
 
 export type RHFSwitchProps = {
   control: Control<any>;
   name: string;
   label?: React.ReactNode;
   description?: React.ReactNode;
-
   containerClassName?: string;
   labelClassName?: string;
-
   disabled?: boolean;
 };
 
@@ -31,9 +30,7 @@ export function RHFSwitch({
   return (
     <div className={containerClassName ?? "space-y-2"}>
       {label ? (
-        <Label htmlFor={`switch-${name}`} className={labelClassName}>
-          {label}
-        </Label>
+        <Label label={label} name={name} className={labelClassName} />
       ) : null}
 
       <div className="flex items-start gap-3">
@@ -44,16 +41,12 @@ export function RHFSwitch({
           onCheckedChange={(v) => field.onChange(v)}
         />
 
-        <div className="space-y-1">
-          <div className="text-sm text-text font-medium">
-            {typeof label === "string" ? label : null}
-          </div>
-
-          {description ? (
-            <div className="text-xs text-muted">{description}</div>
-          ) : null}
-        </div>
+        {description ? (
+          <div className="text-xs text-muted">{description}</div>
+        ) : null}
       </div>
     </div>
   );
 }
+
+export default RHFSwitch;

@@ -89,7 +89,6 @@
 // export default ButtonBase;
 import * as React from "react";
 import { Loader } from "../Loader";
-//import Loader from "../Loader";
 
 type ButtonVariant = "solid" | "bordered";
 type ButtonColor =
@@ -99,6 +98,15 @@ type ButtonColor =
   | "warning"
   | "success"
   | "gray";
+
+type NormalizedButtonColor =
+  | "primary"
+  | "secondary"
+  | "danger"
+  | "warning"
+  | "success"
+  | "neutral";
+
 type ButtonSize = "xs" | "sm" | "md" | "lg" | "xl";
 type ButtonTextSize = "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
 type ButtonShadow = "none" | "sm" | "md" | "lg" | "xl";
@@ -120,42 +128,38 @@ function cx(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
 }
 
-const variantClasses: Record<ButtonColor, Record<ButtonVariant, string>> = {
+function normalizeColor(color: ButtonColor | undefined): NormalizedButtonColor {
+  if (color === "gray") return "neutral";
+  return color ?? "primary";
+}
+
+const variantClasses: Record<
+  NormalizedButtonColor,
+  Record<ButtonVariant, string>
+> = {
   primary: {
-    solid:
-      "mx-btn--solid mx-btn--primary",
-    bordered:
-      "mx-btn--outline mx-btn--primary",
+    solid: "mx-btn--solid mx-btn--primary",
+    bordered: "mx-btn--outline mx-btn--primary",
   },
   secondary: {
-    solid:
-      "mx-btn--solid mx-btn--secondary",
-    bordered:
-      "mx-btn--outline mx-btn--secondary",
+    solid: "mx-btn--solid mx-btn--secondary",
+    bordered: "mx-btn--outline mx-btn--secondary",
   },
-  gray: {
-    solid:
-      "mx-btn--solid mx-btn--neutral",
-    bordered:
-      "mx-btn--outline mx-btn--neutral",
+  neutral: {
+    solid: "mx-btn--solid mx-btn--neutral",
+    bordered: "mx-btn--outline mx-btn--neutral",
   },
   danger: {
-    solid:
-      "mx-btn--solid mx-btn--danger",
-    bordered:
-      "mx-btn--outline mx-btn--danger",
+    solid: "mx-btn--solid mx-btn--danger",
+    bordered: "mx-btn--outline mx-btn--danger",
   },
   warning: {
-    solid:
-      "mx-btn--solid mx-btn--warning",
-    bordered:
-      "mx-btn--outline mx-btn--warning",
+    solid: "mx-btn--solid mx-btn--warning",
+    bordered: "mx-btn--outline mx-btn--warning",
   },
   success: {
-    solid:
-      "mx-btn--solid mx-btn--success",
-    bordered:
-      "mx-btn--outline mx-btn--success",
+    solid: "mx-btn--solid mx-btn--success",
+    bordered: "mx-btn--outline mx-btn--success",
   },
 };
 
@@ -204,6 +208,7 @@ export const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonBaseProps>(
     ref
   ) {
     const isDisabled = disabled || isLoading;
+    const normalizedColor = normalizeColor(color);
 
     return (
       <button
@@ -212,10 +217,10 @@ export const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonBaseProps>(
         {...props}
         disabled={isDisabled}
         className={cx(
-          "mx-btn rounded-lg border-2 px-3 font-semibold transition-all duration-200 ease-linear disabled:pointer-events-none disabled:select-none disabled:opacity-70",
+          "mx-btn px-3 font-semibold transition-all duration-200 ease-linear disabled:pointer-events-none disabled:select-none disabled:opacity-70",
           shadowClasses[shadow],
           textSizeClasses[textSize],
-          variantClasses[color][variant],
+          variantClasses[normalizedColor][variant],
           isLoading && "mx-btn--loading",
           className
         )}
@@ -226,10 +231,19 @@ export const ButtonBase = React.forwardRef<HTMLButtonElement, ButtonBaseProps>(
             sizeClasses[size]
           )}
         >
-          {startContent}
-          {children}
-          {endContent}
-          {isLoading && <Loader />}
+          {startContent ? (
+            <span className="mx-btn__slot">{startContent}</span>
+          ) : null}
+
+          <span className={cx(isLoading && "mx-btn__text--loading")}>
+            {children}
+          </span>
+
+          {endContent ? (
+            <span className="mx-btn__slot">{endContent}</span>
+          ) : null}
+
+          {isLoading ? <Loader /> : null}
         </div>
       </button>
     );

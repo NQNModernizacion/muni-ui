@@ -113,8 +113,11 @@ export type ContainerProps = React.PropsWithChildren<{
   subtitle?: React.ReactNode;
   linkBack?: string;
   className?: string;
+  outerClassName?: string;
 
-  /** opcional, para mantener compatibilidad sin depender de react-router-dom */
+  backLabel?: React.ReactNode;
+  backIcon?: React.ReactNode;
+
   onBack?: () => void;
   BackComponent?: React.ElementType<any>;
 }>;
@@ -125,6 +128,9 @@ export default function Container({
   subtitle,
   linkBack,
   className,
+  outerClassName,
+  backLabel = "Volver",
+  backIcon,
   onBack,
   BackComponent,
   ...props
@@ -134,7 +140,7 @@ export default function Container({
   const BackTag: React.ElementType<any> =
     BackComponent ?? (linkBack ? "a" : "button");
 
-  const backProps = //soporta tres casos distintos para el botón de volver:
+  const backProps =
     BackTag === "button"
       ? { type: "button", onClick: onBack }
       : BackComponent
@@ -143,7 +149,10 @@ export default function Container({
 
   return (
     <section
-      className="relative mx-auto w-full max-w-screen-xl rounded-lg bg-surface/70 p-2.5"
+      className={cx(
+        "relative mx-auto w-full max-w-screen-xl rounded-lg bg-surface/70 p-2.5",
+        outerClassName
+      )}
       {...props}
     >
       <div className={cx("rounded-md bg-surface p-4 sm:p-6", className)}>
@@ -152,12 +161,18 @@ export default function Container({
             <BackTag
               {...backProps}
               className={cx(
-                "flex items-center gap-1 rounded-md px-3 py-1.5 text-sm font-semibold shadow-sm transition-colors duration-200",
+                "inline-flex items-center gap-1 rounded-md px-3 py-1.5",
+                "text-sm font-semibold shadow-sm transition-colors duration-200",
                 "text-nav-action-text bg-nav-action-bg hover:bg-nav-action-bg-hover"
               )}
             >
-              <span className="inline-flex">←</span>
-              Volver
+              {backIcon ? (
+                <span className="inline-flex">{backIcon}</span>
+              ) : (
+                <span className="inline-flex">←</span>
+              )}
+
+              {backLabel}
             </BackTag>
           </div>
         )}
@@ -167,7 +182,7 @@ export default function Container({
             <h2 className="w-full text-center text-3xl font-bold">{title}</h2>
 
             {subtitle && (
-              <p className="text-center text-2xl font-semibold text-muted">
+              <p className="mt-1 text-center text-lg font-medium text-muted">
                 {subtitle}
               </p>
             )}

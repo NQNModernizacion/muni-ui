@@ -13,7 +13,6 @@
     "tailwind-preset.js",
     "README.md"
   ],
-  "prepare": "npm run build",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -28,12 +27,12 @@
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build && npm run build:types",
+    "dev": "vite --config vite.playground.config.ts",
+    "build": "node --eval \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && vite build --config vite.config.ts && npm run build:types",
     "build:types": "tsc -p tsconfig.types.json",
     "prepublishOnly": "npm run build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview --config vite.playground.config.ts"
   },
   "peerDependencies": {
     "react": ">=18 <20",

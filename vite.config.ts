@@ -4,6 +4,7 @@ import { resolve } from "node:path";
 
 export default defineConfig({
   plugins: [react()],
+  publicDir: false,
   build: {
     lib: {
       entry: resolve(__dirname, "src/index.ts"),
@@ -11,8 +12,15 @@ export default defineConfig({
       formats: ["es", "cjs"],
       fileName: (format) => (format === "es" ? "index.mjs" : "index.cjs"),
     },
-       rollupOptions: {
-      external: ["react", "react-dom", "react/jsx-runtime", "react/jsx-dev-runtime", "react-hook-form", "react-toastify"],
+    rollupOptions: {
+      external: [
+        "react",
+        "react-dom",
+        "react/jsx-runtime",
+        "react/jsx-dev-runtime",
+        "react-hook-form",
+        "react-toastify",
+      ],
       output: {
         globals: {
           react: "React",

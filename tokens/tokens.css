@@ -4,8 +4,11 @@
    --mx-primary-500: 255 97 105;
    --mx-primary-600: 160 49 45;
  
-   --mx-secondary-500: 250 238 160;
-  --mx-secondary-600: 245 190 45; 
+   /* --mx-secondary-500: 250 238 160;
+  --mx-secondary-600: 245 190 45;  */
+
+--mx-secondary-500: 240 238 155;
+--mx-secondary-600: 225 223 120;
 
        /* --mx-primary-400: 232 81 207;
    --mx-primary-500: 91 81 232;
@@ -52,5 +55,12 @@
    --mx-nav-action-bg: var(--mx-primary-400);
    --mx-nav-action-bg-hover: var(--mx-primary-600);
    --mx-nav-action-text: 255 255 255;
+
+   
+  --mx-table-header-bg: var(--mx-secondary-500);
+  --mx-table-header-text: var(--mx-primary-400);
+  --mx-table-row-zebra: 242 242 242;
+  --mx-table-row-hover: 255 248 220;
+
  }
  

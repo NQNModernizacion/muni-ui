@@ -104,10 +104,7 @@
 //   );
 // }
 import * as React from "react";
-
 import Table from "./Table";
-import TableToolbar from "./TableToolbar";
-import TablePagination from "./TablePagination";
 import type { GetRowId, TableColumn } from "./table.types";
 import { Modal } from "../Modal";
 
@@ -120,18 +117,18 @@ export type TableModalProps<T> = {
   columns: Array<TableColumn<T>>;
   getRowId?: GetRowId<T>;
 
-  searchValue: string;
-  onSearchChange: (value: string) => void;
-  searchPlaceholder?: string;
-
-  page: number;
-  rowsPerPage: number;
-  rowsPerPageOptions?: number[];
-  onPageChange: (page: number) => void;
-  onRowsPerPageChange: (rowsPerPage: number) => void;
-
   emptyText?: React.ReactNode;
+  loading?: boolean;
+
+  search?: boolean;
+  searchPlaceholder?: string;
+  pagination?: boolean;
+  pageSize?: number;
+  pageSizeOptions?: number[];
+
+  trigger?: boolean | number | string;
 };
+
 
 export default function TableModal<T>({
   open,
@@ -140,21 +137,15 @@ export default function TableModal<T>({
   rows,
   columns,
   getRowId,
-  searchValue,
-  onSearchChange,
-  searchPlaceholder = "Buscar...",
-  page,
-  rowsPerPage,
-  rowsPerPageOptions,
-  onPageChange,
-  onRowsPerPageChange,
   emptyText,
+  loading,
+  search = true,
+  searchPlaceholder = "Buscar...",
+  pagination = true,
+  pageSize = 10,
+  pageSizeOptions = [10, 25, 50, 100],
+  trigger,
 }: TableModalProps<T>) {
-  const total = rows.length;
-  const start = page * rowsPerPage;
-  const end = Math.min(start + rowsPerPage, total);
-  const pageRows = rows.slice(start, end);
-
   return (
     <Modal
       show={open}
@@ -162,34 +153,20 @@ export default function TableModal<T>({
       title={title}
       variant="primary"
       maxWidth="max-w-6xl"
-      footer={
-        <div className="flex items-center justify-between gap-3">
-          <div />
-          <TablePagination
-            total={total}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            rowsPerPageOptions={rowsPerPageOptions}
-            onPageChange={onPageChange}
-            onRowsPerPageChange={onRowsPerPageChange}
-          />
-        </div>
-      }
     >
-      <div className="space-y-3">
-        <TableToolbar
-          searchValue={searchValue}
-          onSearchChange={onSearchChange}
-          placeholder={searchPlaceholder}
-        />
-
-        <Table
-          rows={pageRows}
-          columns={columns}
-          getRowId={getRowId}
-          emptyText={emptyText}
-        />
-      </div>
+      <Table
+        rows={rows}
+        columns={columns}
+        getRowId={getRowId}
+        emptyText={emptyText}
+        loading={loading}
+        search={search}
+        searchPlaceholder={searchPlaceholder}
+        pagination={pagination}
+        pageSize={pageSize}
+        pageSizeOptions={pageSizeOptions}
+        trigger={trigger}
+      />
     </Modal>
   );
 }
